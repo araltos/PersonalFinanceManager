@@ -111,10 +111,11 @@ def add_transaction(finance):
     
     # Get amount
     amount_str = input("Enter amount: $")
-    if not validate_amount(amount_str):
-        print(f"{Fore.RED}Invalid amount{Style.RESET_ALL}")
+    is_valid, amount_or_msg = validate_amount(amount_str)
+    if not is_valid:
+        print(f"{Fore.RED}{amount_or_msg}{Style.RESET_ALL}")
         return
-    amount = float(amount_str)
+    amount = amount_or_msg
     
     # Get category
     categories = settings.INCOME_CATEGORIES if transaction_type == 'income' else settings.EXPENSE_CATEGORIES
@@ -225,7 +226,7 @@ def delete_transaction(finance):
     
     transaction_id = input("\nEnter the Firestore ID of the transaction to delete: ").strip()
     
-    confirm = input(f"Are you sure you want to delete transaction {transaction_id}? (y/N): ").strip().lower()
+    confirm = input(f"Are you sure you want to delete transaction {transaction_id}? (Y/N): ").strip().lower()
     if confirm == 'y':
         try:
             finance.delete_transaction(transaction_id)
